@@ -17,7 +17,11 @@ apt upgrade -y
 echo "####################"
 echo "installing conveniences"
 echo "####################"
-apt install ripgrep vim fzf net-tools git unattended-upgrades tmux containerd -y
+apt install ripgrep vim fzf net-tools git unattended-upgrades tmux -y
+apt autoremove -y
+apt purge -y
+
+git submodule update --init --recursive
 
 
 echo "####################"
