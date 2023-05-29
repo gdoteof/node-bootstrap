@@ -1,0 +1,3 @@
+[submodule "gen-hostname"]
+	path = gen-hostname
+	url = https://github.com/gdoteof/gen-hostname.git
