@@ -30,7 +30,7 @@ fi
 mkdir -p /var/lib/rancher/k3s/server/manifests/
 
 # Move Helm addons to the k3s manifests directory
-mv ./helmAddons/* /var/lib/rancher/k3s/server/manifests/
+cp ./helmAddons/* /var/lib/rancher/k3s/server/manifests/
 
 # Check if the move operation was successful
 if [ $? -eq 0 ]; then
