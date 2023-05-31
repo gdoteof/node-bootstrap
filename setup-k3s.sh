@@ -33,4 +33,4 @@ fi
 
 
 
-curl -sfL https://get.k3s.io | K3S_TOKEN=$TOKEN sh -s - server --server https://10.10.1.2:6443
+curl -sfL https://get.k3s.io | K3S_TOKEN=$TOKEN sh -s - server --server https://10.10.1.2:6443/
