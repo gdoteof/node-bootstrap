@@ -104,10 +104,8 @@ function remove_ceph_crypt() {
                   dmsetup remove "$device"
             done
       fi
-      echo "DEBUG--  AFTER CRYPT"
 
       ceph_devices=$(dmsetup info -c --noheadings 2>/dev/null | awk -F: '{print $GEOFF_DISK}' | grep '^ceph' || :)
-      echo "DEBUG--  AFTER CEPH SEARCH"
 
       if [ -z "$ceph_devices" ]; then
             echo "No devices with names starting with 'ceph' found."
@@ -191,15 +189,21 @@ function prepare_xfs_partition() {
       expect_geoff_disk
       local DISK=$GEOFF_DISK
       local SIZE=$1
+      local p=$2
 
-      echo "Preparing $DISK for partitioning..."
+      echo "Preparing $DISK for partitioning for rootfs..."
+      echo "Making a parition of size $SIZE on $DISK"
 
       # Create a partition
       parted -s -- $DISK mkpart primary 0% "$SIZE"
 
       # Refresh the disk and format the partition as XFS
       partprobe $DISK
-      mkfs.xfs ${DISK}p1
+
+      echo "Making an xfs parition of size $SIZE on $DISK"
+      local label = "${DISK}p${p}"
+      echo "Making an xfs parition of size $SIZE on $DISK on $label"
+      mkfs.xfs ${label} 
 }
 
 function prepare_ceph_device() {
