@@ -1,9 +1,8 @@
 #!/bin/bash
 set -e
 
-source __common_functions.sh
-source __k3s_functions.sh
-source __disk_functions.sh
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+. "$SCRIPT_DIR/__common_functions.sh"
 
 check_root
 
@@ -15,7 +14,6 @@ expect_geoff_creds
 
 
 
-deleteOldRancher
 copyk3sConfig
 copyHelmConfig
 

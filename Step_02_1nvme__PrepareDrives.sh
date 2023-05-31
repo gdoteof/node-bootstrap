@@ -2,8 +2,8 @@
 set -e
 /usr/local/bin/k3s-uninstall.sh || echo "no previous k3s found"
 
-source __common_functions.sh
-check_root
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+. "$SCRIPT_DIR/__common_functions.sh"
 
 
 select_disk

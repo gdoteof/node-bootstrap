@@ -2,7 +2,7 @@
 
 set -e
 
-source __common_functions.sh
+. ./__common_functions.sh
 check_root
 
 /usr/local/bin/k3s-uninstall.sh || echo "no previous k3s found"

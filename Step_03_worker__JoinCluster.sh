@@ -1,8 +1,8 @@
 #!/bin/bash
 set -e
 
-source __common_functions.sh
-source __k3s_functions.sh
+. ./__common_functions.sh
+. ./__k3s_functions.sh
 
 check_root
 
