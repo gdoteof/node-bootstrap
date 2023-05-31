@@ -85,11 +85,11 @@ function copyHelmAddons() {
 }
 
 function deleteOldRancher() {
-      rm -rf /var/lib/rancher
+      rm -rf /var/lib/rancher/
 }
 
 function deleteOldContainerD() {
-      rm -rf /var/lib/containerd
+      rm -rf /var/lib/containerd/
 }
 
 # disk functions
