@@ -5,7 +5,7 @@ if [ "$(id -u)" -ne 0 ]; then
   exit 1
 fi
 
-/usr/local/bin/k3s-uninstall.sh || "no previous k3s found"
+/usr/local/bin/k3s-uninstall.sh || echo "no previous k3s found"
 
 TOKEN=$(tr -dc A-Za-z0-9 </dev/urandom | head -c 64 ; echo '')
 echo using $TOKEN
