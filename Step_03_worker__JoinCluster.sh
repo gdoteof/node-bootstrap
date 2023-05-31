@@ -1,15 +1,13 @@
 #!/bin/bash
 set -e
 
-. ./__common_functions.sh
-. ./__k3s_functions.sh
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+. "$SCRIPT_DIR/__common_functions.sh"
 
 check_root
-
 /usr/local/bin/k3s-uninstall.sh || echo "no previous k3s found"
 
 parse_creds "$@"
-
 expect_geoff_creds
 
 

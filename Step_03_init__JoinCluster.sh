@@ -20,4 +20,6 @@ curl -sfL https://get.k3s.io | K3S_TOKEN=$TOKEN sh -s - server --cluster-init
 
 echo "if that worked you should be able to do:"
 GEOFF_K3S_SERVER=10.10.1.2
-echo "curl -sfL https://get.k3s.io | K3S_TOKEN=$TOKEN K3S_SERVER=$GEOFF_K3S_SERVER sh -s - server --cluster-init"
+echo "./Step_03_god__JoinCluster.sh --geoff-k3s-token $TOKEN --geoff-k3s-server=$GEOFF_K3S_SERVER"
+echo "or"
+echo "./Step_03_worker__JoinCluster.sh --geoff-k3s-token $TOKEN --geoff-k3s-server=$GEOFF_K3S_SERVER"
