@@ -1,3 +1,6 @@
 [submodule "gen-hostname"]
 	path = gen-hostname
 	url = https://github.com/gdoteof/gen-hostname.git
+[submodule "cluster/rook"]
+	path = cluster/rook
+	url = git@github.com:rook/rook.git
