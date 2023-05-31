@@ -182,13 +182,10 @@ function sync_partition() {
 
       if grep -q "^${DISK}p${PARTITION_NUMBER}.*$MOUNT_POINT" /etc/fstab; then
             echo "Partition already mounted at $MOUNT_POINT"
-            umount /mnt && exit 1
       else
             echo "${DISK}p${PARTITION_NUMBER}  $MOUNT_POINT  xfs  defaults  0 0" >>/etc/fstab
       fi
 
-      echo "Leaving isolation mode, this could also take a minute"
-      echo "Left isolation mode"
 }
 
 function shutdown_services() {
