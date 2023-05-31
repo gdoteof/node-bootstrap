@@ -21,3 +21,5 @@ sync_partition "/var" $GEOFF_DISK 1
 prepare_ceph_device # implies 75% to ceph
 
 move_var_to_nvme
+
+reboot
