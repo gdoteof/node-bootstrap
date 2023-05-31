@@ -88,6 +88,10 @@ function deleteOldRancher() {
       rm -rf /var/lib/rancher
 }
 
+function deleteOldContainerD() {
+      rm -rf /var/lib/containerd
+}
+
 # disk functions
 
 function remove_ceph_crypt() {

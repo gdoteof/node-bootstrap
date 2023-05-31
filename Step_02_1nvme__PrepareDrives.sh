@@ -13,6 +13,7 @@ remove_ceph_crypt
 wipe_disk
 
 deleteOldRancher
+deleteOldContainerD
 
 prepare_xfs_partition "25%"
 sync_partition "/var" $GEOFF_DISK 1
