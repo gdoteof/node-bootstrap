@@ -5,7 +5,7 @@ if [ "$EUID" -ne 0 ]
   exit
 fi
 
-crypt_devices=$(dmsetup info -c --noheadings | grep 'CRYPT-' | awk '{print $1}')
+crypt_devices=$(dmsetup info -c --noheadings | grep 'CRYPT-' | awk -F: '{print $1}')
 
 if [ -z "$crypt_devices" ]
 then
@@ -18,7 +18,7 @@ else
       done
 fi
 
-ceph_devices=$(dmsetup info -c --noheadings | awk '{print $1}' | grep '^ceph')
+ceph_devices=$(dmsetup info -c --noheadings | awk -F: '{print $1}' | grep '^ceph')
 
 if [ -z "$ceph_devices" ]
 then
@@ -30,3 +30,4 @@ else
           dmsetup remove "$device"
       done
 fi
+
