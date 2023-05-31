@@ -16,11 +16,13 @@ wipe_disk
 
 echo "Deleting old rancher"
 deleteOldRancher
+deleteOldContainerD
 
 echo "Creating partition"
 prepare_xfs_partition "25%" 1
 echo "Syncing var to partition"
 sync_partition "/var" 1
+systemctl default
 
 
 echo "Preparing ceph device"
