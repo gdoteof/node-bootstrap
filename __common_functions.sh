@@ -104,8 +104,10 @@ function remove_ceph_crypt() {
                   dmsetup remove "$device"
             done
       fi
+      echo "DEBUG--  AFTER CRYPT"
 
       ceph_devices=$(dmsetup info -c --noheadings | awk -F: '{print $GEOFF_DISK}' | grep '^ceph')
+      echo "DEBUG--  AFTER CEPH SEARCH"
 
       if [ -z "$ceph_devices" ]; then
             echo "No devices with names starting with 'ceph' found."
@@ -116,7 +118,7 @@ function remove_ceph_crypt() {
                   dmsetup remove "$device"
             done
       fi
-
+      echo "DEBUG--  AFTER CEPH REMOVE"
 }
 
 function select_disk() {
