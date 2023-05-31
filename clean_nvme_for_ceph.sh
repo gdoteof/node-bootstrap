@@ -58,7 +58,7 @@ function partition_disk() {
   # Remove old partition table
   parted -s $DISK mklabel gpt
 
-  local END=0
+    local END=0%
   local DEFAULT_NAME="rancher"
   # Get the total disk size in bytes
   
@@ -79,12 +79,13 @@ function partition_disk() {
     SIZE=${SIZE:-$DEFAULT_SIZE}
   
     # Create a partition
-    parted -s $DISK mkpart primary $END $SIZE
+    parted -s -- $DISK mkpart primary $END $SIZE
   
     # Update the start position for the next partition
     END=$SIZE
   
-    # Format the partition as XFS
+    # Refresh the disk and format the partition as XFS
+    partprobe $DISK
     mkfs.xfs ${DISK}p${PARTITION_NUMBER}
   
     echo "Partition $NAME of size $SIZE created and formatted as XFS."
@@ -94,9 +95,9 @@ function partition_disk() {
   
   # If there's any space left on the disk, create a partition for Ceph
   if [ $END != '100%' ]; then
-    parted -s $DISK mkpart primary $END 100%
-  
-    # Create a physical volume on the remaining space
+    parted -s -- $DISK mkpart primary $END 100%
+
+    partprobe $DISK
     pvcreate ${DISK}p${PARTITION_NUMBER}
   
     echo "Remaining space left as a raw volume for Ceph."
