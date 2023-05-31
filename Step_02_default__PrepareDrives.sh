@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 /usr/local/bin/k3s-uninstall.sh || echo "no previous k3s found"
 
