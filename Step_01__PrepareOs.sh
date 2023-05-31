@@ -21,7 +21,7 @@ apt upgrade -y
 echo "####################"
 echo "installing conveniences and script requirements"
 echo "####################"
-apt install ripgrep vim fzf net-tools git unattended-upgrades tmux man-db bc -y
+apt install ripgrep vim fzf net-tools git unattended-upgrades tmux man-db bc rsync -y
 apt autoremove -y
 apt purge -y
 
