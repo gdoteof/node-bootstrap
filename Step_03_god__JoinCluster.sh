@@ -15,6 +15,7 @@ expect_geoff_creds
 
 
 copyk3sConfig
-copyHelmConfig
+copyHelmAddons
+
 
 curl -sfL https://get.k3s.io | K3S_TOKEN=$GEOFF_K3S_TOKEN K3S_SERVER=$GEOFF_K3S_SERVER sh -s - server
