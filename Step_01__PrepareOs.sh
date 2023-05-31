@@ -1,9 +1,7 @@
 #!/bin/sh
+source __common_functions.sh
 
-if [ "$(id -u)" -ne 0 ]; then
-  echo "Please run as root."
-  exit 1
-fi
+check_root
 
 echo "####################"
 echo "getting latest defaults"
@@ -15,7 +13,7 @@ apt upgrade -y
 
 
 echo "####################"
-echo "installing conveniences"
+echo "installing conveniences and script requirements"
 echo "####################"
 apt install ripgrep vim fzf net-tools git unattended-upgrades tmux man-db bc -y
 apt autoremove -y

@@ -1,43 +1,24 @@
 #!/bin/bash
 
-if [ "$(id -u)" -ne 0 ]; then
-  echo "Please run as root."
-  exit 1
-fi
+set -e
+
+source __common_functions.sh
+check_root
 
 /usr/local/bin/k3s-uninstall.sh || echo "no previous k3s found"
 
 TOKEN=$(tr -dc A-Za-z0-9 </dev/urandom | head -c 64 ; echo '')
 echo using $TOKEN
 
-config_file="k3s-config.yaml"
+import __k3s_functions.sh
 
-# Ensure k3s config directory exists
-mkdir -p /etc/rancher/k3s/
-
-# Copy the appropriate config file to the k3s config directory
-cp ./k3s/$config_file /etc/rancher/k3s/config.yaml
-
-# Check if the copy operation was successful
-if [ $? -eq 0 ]; then
-  echo "Configuration file copied successfully."
-else
-  echo "Failed to copy configuration file."
-  exit 1
-fi
-
-# Ensure k3s manifests directory exists
-mkdir -p /var/lib/rancher/k3s/server/manifests/
-
-# Move Helm addons to the k3s manifests directory
-cp ./helmAddons/* /var/lib/rancher/k3s/server/manifests/
-
-# Check if the move operation was successful
-if [ $? -eq 0 ]; then
-  echo "Helm addons moved successfully."
-else
-  echo "Failed to move Helm addons."
-  exit 1
-fi
+deleteOldRancher
+copyk3sConfig
+copyHelmConfig
 
 curl -sfL https://get.k3s.io | K3S_TOKEN=$TOKEN sh -s - server --cluster-init
+
+
+echo "if that worked you should be able to do:"
+GEOFF_K3S_SERVER=10.10.1.2
+echo "curl -sfL https://get.k3s.io | K3S_TOKEN=$TOKEN K3S_SERVER=$GEOFF_K3S_SERVER sh -s - server --cluster-init"
