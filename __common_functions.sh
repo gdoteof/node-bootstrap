@@ -205,7 +205,7 @@ function prepare_xfs_partition() {
       partprobe $DISK
 
       echo "Making an xfs parition of size $SIZE on $DISK"
-      local label = "${DISK}p${p}"
+      local label="${DISK}p${p}"
       echo "Making an xfs parition of size $SIZE on $DISK on $label"
       mkfs.xfs ${label} 
 }
