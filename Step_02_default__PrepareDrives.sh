@@ -13,11 +13,17 @@ select_disk
 remove_ceph_crypt
 wipe_disk
 
+
+echo "Deleting old rancher"
 deleteOldRancher
 
+echo "Creating partition"
 prepare_xfs_partition "25%" 1
-sync_partition "/var" $GEOFF_DISK 1
+echo "Syncing var to partition"
+sync_partition "/var" 1
 
+
+echo "Preparing ceph device"
 prepare_ceph_device # implies 75% to ceph
 
 move_var_to_nvme
