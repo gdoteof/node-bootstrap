@@ -59,10 +59,10 @@ function partition_disk() {
   parted -s $DISK mklabel gpt
 
     local END=0%
-  local DEFAULT_NAME="rancher"
+  local DEFAULT_NAME="var"
   # Get the total disk size in bytes
   
-  local DEFAULT_SIZE="12.5%"
+  local DEFAULT_SIZE="25%"
 
   PARTITION_NUMBER=1
   while true; do
