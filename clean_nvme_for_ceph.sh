@@ -49,39 +49,6 @@ echo "Formatting on $DISK"
 
 echo "When you are done, give an empty partition and the remaining disk will be left as raw volume for ceph."
 
-partition_name="rancher"
-partition_size="100g"
-
-while true; do
-    read -p "Partition name [$partition_name]: " user_partition_name
-    read -p "Partition size [$partition_size]: " user_partition_size
-
-    # Use user's input if provided, otherwise use defaults/current values
-    partition_name=${user_partition_name:-$partition_name}
-    partition_size=${user_partition_size:-$partition_size}
-
-    # Call a function to create the partition with the given name and size
-    # create_partition $partition_name $partition_size
-
-    if [[ -z "$user_partition_name" ]]; then
-        break
-    fi
-
-    # Reset default partition name after first iteration
-    partition_name=""
-done
-
-while true; do
-    read -p "Partition name []: " user_partition_name
-
-    # Call a function to create the partition with the given name
-    # create_partition $user_partition_name
-
-    if [[ -z "$user_partition_name" ]]; then
-        break
-    fi
-done
-
 function partition_disk() {
   local DISK=$1
 
@@ -95,42 +62,53 @@ function partition_disk() {
 
   local END=0
   local DEFAULT_NAME="rancher"
-  local DEFAULT_SIZE="100G"
+  # Get the total disk size in bytes
+  DISK_SIZE=$(parted -s $DISK unit B print | awk '/^Disk/ {print substr($3, 1, length($3)-1)}')
 
+  # Calculate 10% of the total size for the first partition
+  FIRST_PARTITION_SIZE=$(echo "${DISK_SIZE} * 0.10" | bc)
+  FIRST_PARTITION_SIZE=$(echo $((${FIRST_PARTITION_SIZE%.*} / 4096 * 4096))B)
+
+  local DEFAULT_SIZE=$FIRST_PARTITION_SIZE;
+
+  PARTITION_NUMBER=1
   while true; do
     read -p "Partition name [$DEFAULT_NAME]: " NAME
     NAME=${NAME:-$DEFAULT_NAME}
     DEFAULT_NAME=""
-
+  
     # Break the loop if the name is empty
     if [ -z "$NAME" ]; then
       break
     fi
-
+  
     read -p "Partition size [$DEFAULT_SIZE]: " SIZE
     SIZE=${SIZE:-$DEFAULT_SIZE}
-
+  
     # Create a partition
     parted -s $DISK mkpart primary $END $SIZE
-
-    # Format the partition as XFS
-    mkfs.xfs ${DISK}p${NAME}
-
+  
     # Update the start position for the next partition
     END=$SIZE
-
+  
+    # Format the partition as XFS
+    mkfs.xfs ${DISK}p${PARTITION_NUMBER}
+  
     echo "Partition $NAME of size $SIZE created and formatted as XFS."
+  
+    PARTITION_NUMBER=$((PARTITION_NUMBER+1))
   done
-
+  
   # If there's any space left on the disk, create a partition for Ceph
   if [ $END != '100%' ]; then
     parted -s $DISK mkpart primary $END 100%
-
+  
     # Create a physical volume on the remaining space
-    pvcreate ${DISK}p${NAME}
-
+    pvcreate ${DISK}p${PARTITION_NUMBER}
+  
     echo "Remaining space left as a raw volume for Ceph."
   fi
+
 }
 
 partition_disk ${DISK}
