@@ -1,9 +1,7 @@
 write-kubeconfig-mode: "0644"
 node-label:
-  - "architecture=arm64"
   - "rack=basement0"
   - "storage=ceph"
   - "role=rook"
-cluster-init: true
 flannel-backend: wireguard
 egress-selector-mode: cluster

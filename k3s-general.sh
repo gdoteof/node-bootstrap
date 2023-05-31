@@ -1,14 +1,18 @@
 #!/bin/bash
 
-if [ "$(id -u)" -ne 0 ]; then
-  echo "Please run as root."
+# Prompt for master or worker
+echo "Enter [m] for master configuration or [w] for worker configuration: "
+read choice
+
+# Set config file based on choice
+if [ "$choice" == "m" ]; then
+  config_file="master-config.yaml"
+elif [ "$choice" == "w" ]; then
+  config_file="worker-config.yaml"
+else
+  echo "Invalid choice. Please enter 'm' for master or 'w' for worker."
   exit 1
 fi
-
-TOKEN=$(tr -dc A-Za-z0-9 </dev/urandom | head -c 64 ; echo '')
-echo using $TOKEN
-
-config_file="k3s-config.yaml"
 
 # Ensure k3s config directory exists
 mkdir -p /etc/rancher/k3s/
@@ -38,4 +42,5 @@ else
   exit 1
 fi
 
-curl -sfL https://get.k3s.io | K3S_TOKEN=$TOKEN sh -s - server --cluster-init
+exit 0
+
