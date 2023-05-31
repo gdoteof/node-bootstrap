@@ -78,6 +78,7 @@ function partition_disk() {
     read -p "Partition size [$DEFAULT_SIZE]: " SIZE
     SIZE=${SIZE:-$DEFAULT_SIZE}
   
+    echo "DEBUG--- DISK:$DISK END:$END SIZE:$SIZE"
     # Create a partition
     parted -s -- $DISK mkpart primary $END $SIZE
   
@@ -87,6 +88,7 @@ function partition_disk() {
     # Refresh the disk and format the partition as XFS
     partprobe $DISK
     mkfs.xfs ${DISK}p${PARTITION_NUMBER}
+    echo "DEBUG2--- DISK:$DISK PARTITION_NUMBER:$PARTITION_NUMBER"
   
     echo "Partition $NAME of size $SIZE created and formatted as XFS."
   
