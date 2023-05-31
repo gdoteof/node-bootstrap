@@ -3,5 +3,5 @@ node-label:
   - "rack=basement0"
   - "storage=ceph"
   - "role=rook"
-flannel-backend: wireguard
+flannel-backend: wireguard-native
 egress-selector-mode: cluster
