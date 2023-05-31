@@ -15,7 +15,7 @@ wipe_disk
 
 deleteOldRancher
 
-prepare_xfs_partition "25%"
+prepare_xfs_partition "25%" 1
 sync_partition "/var" $GEOFF_DISK 1
 
 prepare_ceph_device # implies 75% to ceph
