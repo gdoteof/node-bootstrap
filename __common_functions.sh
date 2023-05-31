@@ -141,9 +141,9 @@ function select_disk() {
 }
 
 function sync_partition() {
+      expect_geoff_disk
       set -e
       SOURCE_DIR=$1
-      DISK=$GEOFF_DISK
       PARTITION_NUMBER=$2
 
       # Check if source directory exists
@@ -160,8 +160,8 @@ function sync_partition() {
 
       echo "Syncing $SOURCE_DIR to ${DISK}p${PARTITION_NUMBER}..."
 
-      # Stop all services
-      systemctl stop *
+
+      systemctl isolate emergency.target
 
       # Mount the partitioned disk
       mount "${DISK}p${PARTITION_NUMBER}" /mnt
@@ -181,6 +181,8 @@ function sync_partition() {
       else
             echo "${DISK}p${PARTITION_NUMBER}  $MOUNT_POINT  xfs  defaults  0 0" >>/etc/fstab
       fi
+
+      systemctl default
 }
 
 function wipe_disk() {
