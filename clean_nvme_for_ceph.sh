@@ -65,13 +65,20 @@ function partition_disk() {
   # Get the total disk size in bytes
   DISK_SIZE=$(parted -s $DISK unit B print | awk '/^Disk/ {print substr($3, 1, length($3)-1)}')
 
-  # Calculate 10% of the total size for the first partition
-  FIRST_PARTITION_SIZE=$(echo "${DISK_SIZE} * 0.10" | bc)
-  FIRST_PARTITION_SIZE=$(echo "${FIRST_PARTITION_SIZE} / 4096 * 4096" | bc)
-  IRST_PARTITION_SIZE=${FIRST_PARTITION_SIZE}B
-
-  HUMAN_READABLE_SIZE=$(numfmt --to=iec-i --suffix=B --format="%.5f" $FIRST_PARTITION_SIZE)
-
+  # Calculate 10% of the total size for the first partition, in MiB
+  FIRST_PARTITION_SIZE_MiB=$(echo "scale=0; (${DISK_SIZE} / 1048576) * 0.10 / 1" | bc)
+  # Ensure that the size is a multiple of 1 MiB
+  FIRST_PARTITION_SIZE_MiB=$(echo "${FIRST_PARTITION_SIZE_MiB} / 1 * 1" | bc)
+  
+  # Convert the size back to bytes
+  FIRST_PARTITION_SIZE=$(echo "${FIRST_PARTITION_SIZE_MiB} * 1048576" | bc)
+  
+  # Add the "B" suffix to denote bytes
+  FIRST_PARTITION_SIZE=${FIRST_PARTITION_SIZE}B
+  
+  # Convert the size to a human-readable format
+  HUMAN_READABLE_SIZE=$(numfmt --to=iec-i --suffix=B --format="%.5f" ${FIRST_PARTITION_SIZE})
+  
   local DEFAULT_SIZE=$HUMAN_READABLE_SIZE;
 
   PARTITION_NUMBER=1
