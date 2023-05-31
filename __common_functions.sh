@@ -231,13 +231,14 @@ function prepare_xfs_partition() {
       mkfs.xfs ${label} 
 }
 
+
 function prepare_ceph_device() {
       expect_geoff_disk
       local DISK=$GEOFF_DISK
 
       echo "Preparing remaining space on $DISK as a raw volume for Ceph."
 
-      if [ $(parted -s -- $DISK print free | awk '/^Free Space/ {print $3}') != '100%' ]; then
+      if [ "$(parted -s -- $DISK print free | awk '/^Free Space/ {print $3}')" != '100%' ]; then
             parted -s -- $DISK mkpart primary $(parted -s -- $DISK print free | awk '/^Free Space/ {print $2}') 100%
             partprobe $DISK
             pvcreate ${DISK}p2
@@ -245,3 +246,4 @@ function prepare_ceph_device() {
             echo "Remaining space left as a raw volume for Ceph."
       fi
 }
+
