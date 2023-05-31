@@ -39,8 +39,6 @@ rm -rf /var/lib/rook
 
 sgdisk --zap-all $DISK
 
-dd if=/dev/zero of="$DISK" bs=1M count=100 oflag=direct,dsync
-
 blkdiscard $DISK
 
 partprobe $DISK
@@ -63,27 +61,8 @@ function partition_disk() {
   local END=0
   local DEFAULT_NAME="rancher"
   # Get the total disk size in bytes
-  DISK_SIZE=$(parted -s $DISK unit B print | awk '/^Disk/ {print substr($3, 1, length($3)-1)}')
-
-  # This is the offset for the first partition (1 MiB in sectors)
-  OFFSET=2048
   
-  # Calculate 10% of the total size for the first partition, in MiB
-  FIRST_PARTITION_SIZE_MiB=$(echo "scale=0; (${DISK_SIZE} / 1048576) * 0.10 / 1" | bc)
-  # Ensure that the size is a multiple of 1 MiB
-  FIRST_PARTITION_SIZE_MiB=$(echo "${FIRST_PARTITION_SIZE_MiB} / 1 * 1" | bc)
-  
-  # Convert the size back to sectors
-  FIRST_PARTITION_SIZE_SECTORS=$(echo "${FIRST_PARTITION_SIZE_MiB} * 2048" | bc)
-  
-  # Partition start and end position in sectors
-  START_SECTOR=$OFFSET
-  END_SECTOR=$(echo "$START_SECTOR + $FIRST_PARTITION_SIZE_SECTORS - 1" | bc)
-  
-  # Convert the size to a human-readable format
-  HUMAN_READABLE_SIZE=$(numfmt --to=iec-i --suffix=M --format="%.4f" ${FIRST_PARTITION_SIZE_MiB}M)
-  
-  local DEFAULT_SIZE=$HUMAN_READABLE_SIZE;
+  local DEFAULT_SIZE="10%"
 
   PARTITION_NUMBER=1
   while true; do
