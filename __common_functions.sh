@@ -116,7 +116,6 @@ function remove_ceph_crypt() {
                   dmsetup remove "$device"
             done
       fi
-      echo "DEBUG--  AFTER CEPH REMOVE"
 }
 
 function select_disk() {
@@ -161,7 +160,9 @@ function sync_partition() {
       echo "Syncing $SOURCE_DIR to ${DISK}p${PARTITION_NUMBER}..."
 
 
-      systemctl isolate emergency.target
+      echo "Isolating emergency target, this can take a minute while everythign shuts down."
+      shutdown_services
+      echo "In isolation mode"
 
       # Mount the partitioned disk
       mount "${DISK}p${PARTITION_NUMBER}" /mnt
@@ -182,7 +183,16 @@ function sync_partition() {
             echo "${DISK}p${PARTITION_NUMBER}  $MOUNT_POINT  xfs  defaults  0 0" >>/etc/fstab
       fi
 
-      systemctl default
+      echo "Leaving isolation mode, this could also take a minute"
+      echo "Left isolation mode"
+}
+
+function shutdown_services() {
+      echo "Shutting down services..."
+      systemctl stop cron || true
+      systemctl stop unattended-upgrades || true
+      systemctl stop containerd || true
+      systemctl stop systemd-udevd || true
 }
 
 function wipe_disk() {
