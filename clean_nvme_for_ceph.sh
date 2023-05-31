@@ -69,7 +69,9 @@ function partition_disk() {
   FIRST_PARTITION_SIZE=$(echo "${DISK_SIZE} * 0.10" | bc)
   FIRST_PARTITION_SIZE=$(echo $(-1 + (${FIRST_PARTITION_SIZE%.*} / 4096 * 4096))B)
 
-  local DEFAULT_SIZE=$FIRST_PARTITION_SIZE;
+  HUMAN_READABLE_SIZE=$(numfmt --to=iec-i --suffix=B --format="%.5f" $FIRST_PARTITION_SIZE)
+
+  local DEFAULT_SIZE=$HUMAN_READABLE_SIZE;
 
   PARTITION_NUMBER=1
   while true; do
