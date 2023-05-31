@@ -67,7 +67,7 @@ function partition_disk() {
 
   # Calculate 10% of the total size for the first partition
   FIRST_PARTITION_SIZE=$(echo "${DISK_SIZE} * 0.10" | bc)
-  FIRST_PARTITION_SIZE=$(echo $((${FIRST_PARTITION_SIZE%.*} / 4096 * 4096))B)
+  FIRST_PARTITION_SIZE=$(echo $(-1 + (${FIRST_PARTITION_SIZE%.*} / 4096 * 4096))B)
 
   local DEFAULT_SIZE=$FIRST_PARTITION_SIZE;
 
