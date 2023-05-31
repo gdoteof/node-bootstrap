@@ -80,12 +80,9 @@ function partition_disk() {
   START_SECTOR=$OFFSET
   END_SECTOR=$(echo "$START_SECTOR + $FIRST_PARTITION_SIZE_SECTORS - 1" | bc)
   
-<<<<<<< Updated upstream
-=======
   # Convert the size to a human-readable format
   HUMAN_READABLE_SIZE=$(numfmt --to=iec-i --suffix=M --format="%.4f" ${FIRST_PARTITION_SIZE_MiB}M)
   
->>>>>>> Stashed changes
   local DEFAULT_SIZE=$HUMAN_READABLE_SIZE;
 
   PARTITION_NUMBER=1
