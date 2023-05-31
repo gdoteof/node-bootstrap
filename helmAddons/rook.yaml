@@ -1,0 +1,18 @@
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: rook-ceph
+  namespace: kube-system
+spec:
+  chart: release
+  repo: https://charts.rook.io
+  targetNamespace: rook-ceph
+  valuesContent: |- 
+    cephCommandsTimeoutSeconds: 30
+    csi.enableLiveness: true
+    csi.enableMetadata: true
+    csi.enableOMAPGenerator: true
+    csi.readAffinity.enabled: true
+    csi.serviceMonitor.enabled: true
+    discover.nodeAffinity: role=storage,rook; storage=ceph
+    monitoring.enabled: true
