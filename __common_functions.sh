@@ -158,17 +158,22 @@ function sync_partition() {
             exit 1
       fi
 
+      echo "Syncing $SOURCE_DIR to ${DISK}p${PARTITION_NUMBER}..."
+
       # Stop all services
       systemctl stop *
 
       # Mount the partitioned disk
       mount "${DISK}p${PARTITION_NUMBER}" /mnt
+      echo "Mounted ${DISK}p${PARTITION_NUMBER} at /mnt"
 
       # Rsync source directory to the new partition in preparation for mounting
       rsync -avxHAX --exclude=/var/log/* --exclude=/var/cache/* "$SOURCE_DIR" /mnt/
 
       # Update fstab to mount the new partition at the specified mount point
       MOUNT_POINT="/${SOURCE_DIR##*/}"
+
+      echo "Updating fstab to mount ${DISK}p${PARTITION_NUMBER} at $MOUNT_POINT"
 
       if grep -q "^${DISK}p${PARTITION_NUMBER}.*$MOUNT_POINT" /etc/fstab; then
             echo "Partition already mounted at $MOUNT_POINT"
