@@ -194,6 +194,10 @@ function prepare_xfs_partition() {
       echo "Preparing $DISK for partitioning for rootfs..."
       echo "Making a parition of size $SIZE on $DISK"
 
+      # Create a disk label
+      parted -s -- $DISK mklabel gpt
+
+
       # Create a partition
       parted -s -- $DISK mkpart primary 0% "$SIZE"
 
