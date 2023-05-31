@@ -13,7 +13,6 @@ parse_creds "$@"
 expect_geoff_creds
 
 
-deleteOldRancher
 copyk3sConfig
 
 

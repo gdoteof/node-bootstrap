@@ -12,7 +12,6 @@ echo using $TOKEN
 
 import __k3s_functions.sh
 
-deleteOldRancher
 copyk3sConfig
 copyHelmConfig
 

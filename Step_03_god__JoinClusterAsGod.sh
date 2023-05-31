@@ -3,6 +3,7 @@ set -e
 
 source __common_functions.sh
 source __k3s_functions.sh
+source __disk_functions.sh
 
 check_root
 
@@ -11,6 +12,7 @@ check_root
 parse_creds "$@"
 
 expect_geoff_creds
+
 
 
 deleteOldRancher

@@ -1,6 +1,8 @@
 #!/bin/sh
 source __common_functions.sh
 
+/usr/local/bin/k3s-uninstall.sh || echo "no previous k3s found"
+
 check_root
 
 echo "####################"
