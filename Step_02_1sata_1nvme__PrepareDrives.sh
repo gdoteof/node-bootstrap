@@ -14,4 +14,5 @@ wipe_disk
 
 deleteOldRancher
 
-prepare_ceph_device # implies 75% to ceph
+# nothing to do for raw disk
+# prepare_ceph_device # implies 7

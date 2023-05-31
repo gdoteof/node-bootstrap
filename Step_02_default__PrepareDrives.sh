@@ -27,7 +27,4 @@ systemctl default
 
 echo "Preparing ceph device"
 prepare_ceph_device # implies 75% to ceph
-
-move_var_to_nvme
-
-reboot
+echo "done"
