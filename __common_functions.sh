@@ -106,7 +106,7 @@ function remove_ceph_crypt() {
       fi
       echo "DEBUG--  AFTER CRYPT"
 
-      ceph_devices=$(dmsetup info -c --noheadings | awk -F: '{print $GEOFF_DISK}' | grep '^ceph')
+      ceph_devices=$(dmsetup info -c --noheadings 2>/dev/null | awk -F: '{print $GEOFF_DISK}' | grep '^ceph' || :)
       echo "DEBUG--  AFTER CEPH SEARCH"
 
       if [ -z "$ceph_devices" ]; then
