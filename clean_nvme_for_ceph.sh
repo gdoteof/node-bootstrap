@@ -80,10 +80,10 @@ function partition_disk() {
   
     echo "DEBUG--- DISK:$DISK END:$END SIZE:$SIZE"
     # Create a partition
-    parted -s -- $DISK mkpart primary $END $SIZE
+    parted -s -- $DISK mkpart primary "$END" "$SIZE"
   
     # Update the start position for the next partition
-    END=$SIZE
+    END="$SIZE"
   
     # Refresh the disk and format the partition as XFS
     partprobe $DISK
