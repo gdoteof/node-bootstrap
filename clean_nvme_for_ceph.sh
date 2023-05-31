@@ -62,7 +62,7 @@ function partition_disk() {
   local DEFAULT_NAME="rancher"
   # Get the total disk size in bytes
   
-  local DEFAULT_SIZE="10%"
+  local DEFAULT_SIZE="12.5%"
 
   PARTITION_NUMBER=1
   while true; do
