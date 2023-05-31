@@ -142,9 +142,9 @@ function select_disk() {
 
 function sync_partition() {
       set -e
-      $SOURCE_DIR=$1
-      $DISK=$GEOFF_DISK
-      $PARTITION_NUMBER=$2
+      SOURCE_DIR=$1
+      DISK=$GEOFF_DISK
+      PARTITION_NUMBER=$2
 
       # Check if source directory exists
       if [ ! -d "$SOURCE_DIR" ]; then
