@@ -67,7 +67,8 @@ function partition_disk() {
 
   # Calculate 10% of the total size for the first partition
   FIRST_PARTITION_SIZE=$(echo "${DISK_SIZE} * 0.10" | bc)
-  FIRST_PARTITION_SIZE=$(echo $(-1 + (${FIRST_PARTITION_SIZE%.*} / 4096 * 4096))B)
+  FIRST_PARTITION_SIZE=$(echo "${FIRST_PARTITION_SIZE} / 4096 * 4096" | bc)
+  IRST_PARTITION_SIZE=${FIRST_PARTITION_SIZE}B
 
   HUMAN_READABLE_SIZE=$(numfmt --to=iec-i --suffix=B --format="%.5f" $FIRST_PARTITION_SIZE)
 
