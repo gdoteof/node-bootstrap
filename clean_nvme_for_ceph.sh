@@ -45,20 +45,92 @@ blkdiscard $DISK
 
 partprobe $DISK
 
-# my version below
-# # mine copy-pasted to chat-gpt with some instructions above
-# DISK="/dev/nvme0n1"
-# 
-# rm -rf /var/lib/rook
-# 
-# # Zap the disk to a fresh, usable state (zap-all is important, b/c MBR has to be clean)
-# sgdisk --zap-all $DISK
-# 
-# # Wipe a large portion of the beginning of the disk to remove more LVM metadata that may be present
-# dd if=/dev/zero of="$DISK" bs=1M count=100 oflag=direct,dsync
-# 
-# # SSDs may be better cleaned with blkdiscard instead of dd
-# blkdiscard $DISK
-# 
-# # Inform the OS of partition table changes
-# partprobe $DISK
+echo "Formatting on $DISK"
+
+echo "When you are done, give an empty partition and the remaining disk will be left as raw volume for ceph."
+
+partition_name="rancher"
+partition_size="100g"
+
+while true; do
+    read -p "Partition name [$partition_name]: " user_partition_name
+    read -p "Partition size [$partition_size]: " user_partition_size
+
+    # Use user's input if provided, otherwise use defaults/current values
+    partition_name=${user_partition_name:-$partition_name}
+    partition_size=${user_partition_size:-$partition_size}
+
+    # Call a function to create the partition with the given name and size
+    # create_partition $partition_name $partition_size
+
+    if [[ -z "$user_partition_name" ]]; then
+        break
+    fi
+
+    # Reset default partition name after first iteration
+    partition_name=""
+done
+
+while true; do
+    read -p "Partition name []: " user_partition_name
+
+    # Call a function to create the partition with the given name
+    # create_partition $user_partition_name
+
+    if [[ -z "$user_partition_name" ]]; then
+        break
+    fi
+done
+
+function partition_disk() {
+  local DISK=$1
+
+  echo "Preparing $DISK for partitioning..."
+
+  # Unmount the disk if it's mounted
+  umount $DISK*
+
+  # Remove old partition table
+  parted -s $DISK mklabel gpt
+
+  local END=0
+  local DEFAULT_NAME="rancher"
+  local DEFAULT_SIZE="100G"
+
+  while true; do
+    read -p "Partition name [$DEFAULT_NAME]: " NAME
+    NAME=${NAME:-$DEFAULT_NAME}
+    DEFAULT_NAME=""
+
+    # Break the loop if the name is empty
+    if [ -z "$NAME" ]; then
+      break
+    fi
+
+    read -p "Partition size [$DEFAULT_SIZE]: " SIZE
+    SIZE=${SIZE:-$DEFAULT_SIZE}
+
+    # Create a partition
+    parted -s $DISK mkpart primary $END $SIZE
+
+    # Format the partition as XFS
+    mkfs.xfs ${DISK}p${NAME}
+
+    # Update the start position for the next partition
+    END=$SIZE
+
+    echo "Partition $NAME of size $SIZE created and formatted as XFS."
+  done
+
+  # If there's any space left on the disk, create a partition for Ceph
+  if [ $END != '100%' ]; then
+    parted -s $DISK mkpart primary $END 100%
+
+    # Create a physical volume on the remaining space
+    pvcreate ${DISK}p${NAME}
+
+    echo "Remaining space left as a raw volume for Ceph."
+  fi
+}
+
+partition_disk ${DISK}
