@@ -2,9 +2,11 @@
 
 ## gets a node ready for kubernetes
 
-This is really oriented not just around a kubernetes cluster, but specifically a ceph backed kubernetes cluster running on baremetal.
+This repo is oriented toward building a ceph backing kubernetes backing ceph cluster running on baremetal.  It uses K3s as the kubernetes distribution, and rancher as the kubernetes management system, and my own scripts to get the node ready for kubernetes.
 
-The idea is that you call Step1, then Step2, then Step3. There are multiple options for the second and third step, depending on what you want to do and what your hardware is.
+It comes 'out of the box' prometheus monitoring stack, cert manager, and rook-ceph (with disk encryption turned on).
+
+The idea is that you call Step1 (to make sure we have all the tools we need), then Step2 (to prepare our disks for Ceph), then Step3 (to join the node to the cluster). There are multiple options for the second and third step, depending on what you want to do and what your hardware is.
 
 My main constraint was running on orangepi/nanopi rockchip boards that only have a single drive slot. In those cases, Step 2 here is going to take an nvme drive and cut out 20% of it to mount /var on (I am booting from TF card which is slow, and definitely not great for etcd). In some cases, I have both a SATA and an NVME which are suitable for /var, so I have a Step 2 for that as well, which uses an entire drive for the /root fs, making the /var specific mount superfluous.
 
@@ -12,7 +14,7 @@ Step 3 is actually joining the cluster; which is different depending on if you a
 
 This code is not meant to be run as a script by you (it does work for my use case), but rather as a set of instructions. You will need to edit the code to suit your needs if you want to do similar things. If you use exactly the same hardware as me, you can probably just run it as is.
 
-There are two different k3s configs, one for masters, one for workers.  The config for the first master and any followups are the same.
+There are two different k3s configs, one for masters, one for workers.  The config for the first master and any followups are the same (per K3s).
 
 There are also a set of helm chart addons in the helmAddons folder which install the following charts
 
@@ -20,8 +22,7 @@ There are also a set of helm chart addons in the helmAddons folder which install
 - rook-ceph
 - prometheus-stack
 
-
-Environment variables:
+### Environment variables:
 
 ```sh
 GEOFF_VAR_MOUNT=1 # make a mount for /var
@@ -38,9 +39,9 @@ Code is meant to be self documenting. There are some assumptions though that are
 ## Usage
 
 ```sh
-SKIP_VAR_MOUNT=0 GEOFF_RESET_RANCHER=1 GEOFF_RESET_CEPH=1 ./Step_01__PrepareOs.sh && ./Step_02__<yoursetup>__PrepareDrives.sh
-# if you did not skip the var mount, you should reset here
+GEOFF_VAR_MOUNT=1 GEOFF_RESET_RANCHER=1 GEOFF_RESET_CEPH=1 ./Step_01__PrepareOs.sh && ./Step_02__<yoursetup>__PrepareDrives.sh
+# if you did not skip the var mount, you should reboot here to make sure it is mounted correctly and befor eyou start kubernetes
 
 #init your kubernetes cluster on the first node, this will give you instructions on how to add more nodes
-SKIP_VAR_MOUNT=0 GEOFF_RESET_RANCHER=1 GEOFF_RESET_CEPH=1 ./Step_03_init__PrepareOs.sh && ./Step_02__<yoursetup>__PrepareDrives.sh
+GEOFF_VAR_MOUNT=1 GEOFF_RESET_RANCHER=1 GEOFF_RESET_CEPH=1 ./Step_03_init__PrepareOs.sh && ./Step_02__<yoursetup>__PrepareDrives.sh
 ```
