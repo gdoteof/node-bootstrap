@@ -1,22 +1,19 @@
 #!/bin/bash
 set -e
 
-SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
 . "$SCRIPT_DIR/__common_functions.sh"
 
 check_root
 
 /usr/local/bin/k3s-uninstall.sh || echo "no previous k3s found"
 
-
 echo "####################"
 echo "getting latest defaults"
 echo "####################"
 
-
 apt update
 apt upgrade -y
-
 
 echo "####################"
 echo "installing conveniences and script requirements"
@@ -27,7 +24,6 @@ apt purge -y
 
 git submodule update --init --recursive
 
-
 echo "####################"
 echo "generating host name"
 echo "####################"
@@ -35,7 +31,8 @@ echo "####################"
 CURRENT_HOSTNAME=$(hostname)
 ETC_HOSTNAME=$(cat /etc/hostname)
 
-if [ "$CURRENT_HOSTNAME" = "$ETC_HOSTNAME" ] && [ "$CURRENT_HOSTNAME" != "ubuntu" ]; then
+if [ "$CURRENT_HOSTNAME" = "$ETC_HOSTNAME" ] &&
+    [[ ! "$CURRENT_HOSTNAME" =~ nanopi|ubuntu|orangepi|debian ]]; then
     echo "##### keeping hostname: $CURRENT_HOSTNAME"
 else
     echo "##### detected default hostname, changing."
@@ -50,6 +47,5 @@ else
     echo "changing hostname TO: ->>$CURRENT_HOSTNAME<<-"
     hostname=$NEW_HOSTNAME
     echo "changing /etc/hostname TO: ->>$ETC_HOSTNAME<<-"
-    echo $NEW_HOSTNAME > /etc/hostname
+    echo $NEW_HOSTNAME >/etc/hostname
 fi
-
