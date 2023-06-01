@@ -95,16 +95,21 @@ function copyHelmAddons() {
 }
 
 function deleteOldRancher() {
+      if [ -z "$GEOFF_RESET_RANCHER" ]; then
+            echo "Skipping deleteOldRancher"
+            return
+      fi
       rm -rf /var/lib/rancher/
-}
-
-function deleteOldContainerD() {
       rm -rf /var/lib/containerd/
 }
 
 # disk functions
 
 function remove_ceph_crypt() {
+      if [ -z "$GEOFF_RESET_CEPH" ]; then
+            echo "Skipping ceph crypt removal"
+            return
+      fi
       expect_geoff_disk
 
       crypt_devices=$(dmsetup info -c --noheadings | grep 'CRYPT-' | awk -F: '{print $GEOFF_DISK}')
@@ -153,6 +158,10 @@ function select_disk() {
 }
 
 function sync_partition() {
+      if [ -z "$GEOFF_VAR_MOUNT" ]; then
+            echo "Skipping sync_partition"
+            return
+      fi
       expect_geoff_disk
       set -e
       SOURCE_DIR=$1
@@ -205,6 +214,10 @@ function shutdown_services() {
 }
 
 function wipe_disk() {
+      if [ -z "$GEOFF_RESET_CEPH" ]; then
+            echo "Skipping ceph crypt removal"
+            return
+      fi
       expect_geoff_disk
       sgdisk --zap-all $GEOFF_DISK
       blkdiscard $GEOFF_DISK
@@ -212,6 +225,10 @@ function wipe_disk() {
 }
 
 function prepare_xfs_partition() {
+      if [ -z "$GEOFF_VAR_MOUNT" ]; then
+            echo "Skipping prepare_xfs_partition"
+            return
+      fi
       expect_geoff_disk
       local DISK=$GEOFF_DISK
       local SIZE=$1
