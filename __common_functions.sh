@@ -146,8 +146,7 @@ function select_disk() {
 
       # Check if disk is mounted
       if mount | grep $DISK >/dev/null; then
-            echo "Error: Disk $DISK is currently mounted."
-            exit
+            echo "WARNING: Disk $DISK is currently mounted."
       fi
 
       export GEOFF_DISK=$DISK
