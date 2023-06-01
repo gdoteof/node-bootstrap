@@ -68,8 +68,18 @@ function parse_creds() {
 
 # k3s functions
 
-function copyk3sConfig() {
-      config_file="k3s-config.yaml"
+function copyk3sConfigAgent() {
+      config_file="k3s-config-agent.yaml"
+
+      # Ensure k3s config directory exists
+      mkdir -p /etc/rancher/k3s/
+
+      # Copy the appropriate config file to the k3s config directory
+      cp ./k3s/$config_file /etc/rancher/k3s/config.yaml
+}
+
+function copyk3sConfigGod() {
+      config_file="k3s-config-god.yaml"
 
       # Ensure k3s config directory exists
       mkdir -p /etc/rancher/k3s/
