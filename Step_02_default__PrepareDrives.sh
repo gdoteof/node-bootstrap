@@ -14,7 +14,6 @@ wipe_disk
 
 echo "Deleting old rancher"
 deleteOldRancher
-deleteOldContainerD
 
 echo "Creating partition"
 prepare_xfs_partition "25%" 1
