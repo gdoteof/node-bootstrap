@@ -13,7 +13,7 @@ parse_creds "$@"
 expect_geoff_creds
 
 
-copyk3sConfig
+copyk3sConfigAgent
 
 
 
