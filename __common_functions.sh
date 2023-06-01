@@ -173,7 +173,6 @@ function sync_partition() {
 
       echo "Syncing $SOURCE_DIR to ${DISK}p${PARTITION_NUMBER}..."
 
-
       echo "Isolating emergency target, this can take a minute while everythign shuts down."
       shutdown_services
       echo "In isolation mode"
@@ -225,7 +224,6 @@ function prepare_xfs_partition() {
       # Create a disk label
       parted -s -- $DISK mklabel gpt
 
-
       # Create a partition
       parted -s -- $DISK mkpart primary 0% "$SIZE"
 
@@ -235,9 +233,8 @@ function prepare_xfs_partition() {
       echo "Making an xfs parition of size $SIZE on $DISK"
       local label="${DISK}p${p}"
       echo "Making an xfs parition of size $SIZE on $DISK on $label"
-      mkfs.xfs ${label} 
+      mkfs.xfs ${label}
 }
-
 
 function prepare_ceph_device() {
       expect_geoff_disk
@@ -254,3 +251,7 @@ function prepare_ceph_device() {
       fi
 }
 
+function reset_logs() {
+      journalctl --rotate
+      journalctl --vacuum-time=1s
+}

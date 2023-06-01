@@ -9,6 +9,8 @@ check_root
 /usr/local/bin/k3s-killall.sh || echo "no previous k3s agent stuff found"
 /usr/local/bin/k3s-agent-uninstall.sh || echo "no previous k3s agent stuff found"
 
+reset_logs
+
 parse_creds "$@"
 expect_geoff_creds
 
