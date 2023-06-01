@@ -1,9 +1,13 @@
-#!/bin/sh
+#!/bin/bash
+set -e
 
-if [ "$(id -u)" -ne 0 ]; then
-  echo "Please run as root."
-  exit 1
-fi
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+. "$SCRIPT_DIR/__common_functions.sh"
+
+check_root
+
+/usr/local/bin/k3s-uninstall.sh || echo "no previous k3s found"
+
 
 echo "####################"
 echo "getting latest defaults"
@@ -15,9 +19,9 @@ apt upgrade -y
 
 
 echo "####################"
-echo "installing conveniences"
+echo "installing conveniences and script requirements"
 echo "####################"
-apt install ripgrep vim fzf net-tools git unattended-upgrades tmux -y
+apt install ripgrep vim fzf net-tools git unattended-upgrades tmux man-db bc rsync -y
 apt autoremove -y
 apt purge -y
 

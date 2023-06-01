@@ -1,0 +1,7 @@
+write-kubeconfig-mode: "0644"
+node-label:
+  - "rack=basement0"
+  - "storage=ceph"
+  - "role=rook"
+flannel-backend: wireguard-native
+egress-selector-mode: cluster
