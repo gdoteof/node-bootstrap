@@ -42,6 +42,7 @@ else
     cd ..
     echo "changing hostname FROM: ->>$CURRENT_HOSTNAME<<-"
     echo "changing /etc/hostname FROM: ->>$ETC_HOSTNAME<<-"
+    sed -i "s/$CURRENT_HOSTNAME/$NEW_HOSTNAME/g" /etc/hosts
     CURRENT_HOSTNAME=$NEW_HOSTNAME
     ETC_HOSTNAME=$NEW_HOSTNAME
     echo "changing hostname TO: ->>$CURRENT_HOSTNAME<<-"
