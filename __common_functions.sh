@@ -189,8 +189,14 @@ function sync_partition() {
       mount "${DISK}p${PARTITION_NUMBER}" /mnt
       echo "Mounted ${DISK}p${PARTITION_NUMBER} at /mnt"
 
+      # clean up stuf
+      reset_logs
+      apt clean
+      apt autoremove -y 
+      apt autopurge -y 
+
       # Rsync source directory to the new partition in preparation for mounting
-      rsync -avxHAX --exclude=/var/log/* --exclude=/var/cache/* "$SOURCE_DIR" /mnt/
+      rsync -avxHAX "$SOURCE_DIR" /mnt/
 
       # Update fstab to mount the new partition at the specified mount point
       MOUNT_POINT="/${SOURCE_DIR##*/}"
@@ -264,6 +270,8 @@ function prepare_ceph_device() {
             pvcreate ${DISK}p2
 
             echo "Remaining space left as a raw volume for Ceph."
+      else
+            echo "No remaining space on $DISK., ceph prep skipped."
       fi
 }
 
