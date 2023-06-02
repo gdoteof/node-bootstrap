@@ -270,7 +270,7 @@ function prepare_ceph_device() {
       SIZE=$(echo $OUTPUT | awk '{print $2}')
 
 
-      if ["$SIZE" == 0]; then
+      if ["${SIZE}" == 0]; then
             echo "No remaining space on $DISK, ceph prep skipped."
             return 1
       fi
