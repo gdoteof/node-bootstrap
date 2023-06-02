@@ -192,8 +192,8 @@ function sync_partition() {
       # clean up stuf
       reset_logs
       apt clean
-      apt autoremove -y 
-      apt autopurge -y 
+      apt autoremove -y
+      apt autopurge -y
 
       # Rsync source directory to the new partition in preparation for mounting
       rsync -avxHAX "$SOURCE_DIR" /mnt/
@@ -264,17 +264,27 @@ function prepare_ceph_device() {
 
       echo "Preparing remaining space on $DISK as a raw volume for Ceph."
 
-      if [ "$(parted -s -- $DISK print free | awk '/^Free Space/ {print $3}')" != '100%' ]; then
-            echo "DEBUG: $DISK has free space, creating a partition"
-            parted -s -- $DISK mkpart primary $(parted -s -- $DISK print free | awk '/^Free Space/ {print $2}') 100%
-            echo "DEBUG: Creating a PV on ${DISK}p2"
-            partprobe $DISK
-            pvcreate ${DISK}p2
+      # Get the last free space partition
+      OUTPUT=$(parted -s -- $DISK unit GB print free | grep "Free Space" | tail -1 | awk '{print $1, $3}')
+      START=$(echo $OUTPUT | awk '{print $1}')
+      SIZE=$(echo $OUTPUT | awk '{print $2}')
 
-            echo "Remaining space left as a raw volume for Ceph."
-      else
-            echo "No remaining space on $DISK., ceph prep skipped."
+
+      if ["$SIZE" == 0]; then
+            echo "No remaining space on $DISK, ceph prep skipped."
+            return 1
       fi
+
+      # Create a new partition to use up all remaining space on the disk
+      parted -s -- $DISK mkpart primary ${START} 100%
+      partprobe $DISK
+
+      # Format the new partition as a physical volume for Ceph
+      PARTITION_NUMBER=$(parted -s -- $DISK print | awk '/^ *[0-9]+/ {print $1}' | tail -n 1)
+      echo Making a pv on ${DISK}p$((PARTITION_NUMBER + 1))
+      pvcreate ${DISK}p$((PARTITION_NUMBER + 1))
+
+      echo "All remaining space left as a raw volume for Ceph."
 }
 
 function reset_logs() {
