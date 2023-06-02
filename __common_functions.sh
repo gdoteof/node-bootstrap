@@ -196,10 +196,10 @@ function sync_partition() {
       apt autopurge -y
 
       # Rsync source directory to the new partition in preparation for mounting
-      rsync -avxHAX "$SOURCE_DIR" /mnt/
+      rsync -avxHAX "$SOURCE_DIR/" /mnt/
 
       # Update fstab to mount the new partition at the specified mount point
-      MOUNT_POINT="/${SOURCE_DIR##*/}"
+      MOUNT_POINT=$SOURCE_DIR
 
       echo "Updating fstab to mount ${DISK}p${PARTITION_NUMBER} at $MOUNT_POINT"
 

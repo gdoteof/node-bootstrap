@@ -2,7 +2,7 @@
 
 ## gets a node ready for kubernetes
 
-This repo is oriented toward building a ceph backing kubernetes backing ceph cluster running on baremetal.  It uses K3s as the kubernetes distribution, and rancher as the kubernetes management system, and my own scripts to get the node ready for kubernetes.
+This repo is oriented toward building a ceph backing kubernetes backing ceph cluster running on baremetal. It uses K3s as the kubernetes distribution, and rancher as the kubernetes management system, and my own scripts to get the node ready for kubernetes.
 
 It comes 'out of the box' prometheus monitoring stack, cert manager, and rook-ceph (with disk encryption turned on).
 
@@ -14,7 +14,7 @@ Step 3 is actually joining the cluster; which is different depending on if you a
 
 This code is not meant to be run as a script by you (it does work for my use case), but rather as a set of instructions. You will need to edit the code to suit your needs if you want to do similar things. If you use exactly the same hardware as me, you can probably just run it as is.
 
-There are two different k3s configs, one for masters, one for workers.  The config for the first master and any followups are the same (per K3s).
+There are two different k3s configs, one for masters, one for workers. The config for the first master and any followups are the same (per K3s).
 
 There are also a set of helm chart addons in the helmAddons folder which install the following charts
 
@@ -42,8 +42,14 @@ Code is meant to be self documenting. There are some assumptions though that are
 GEOFF_VAR_MOUNT=1 GEOFF_RESET_RANCHER=1 GEOFF_RESET_CEPH=1 ./Step_01__PrepareOs.sh && ./Step_02__<yoursetup>__PrepareDrives.sh
 # if you did not skip the var mount, you should reboot here to make sure it is mounted correctly and befor eyou start kubernetes
 
-GEOFF_VAR_MOUNT=1 GEOFF_RESET_RANCHER=1 GEOFF_RESET_CEPH=1 ./Step_01__PrepareOs.sh 
+GEOFF_VAR_MOUNT=1 GEOFF_RESET_RANCHER=1 GEOFF_RESET_CEPH=1 ./Step_01__PrepareOs.sh
 GEOFF_VAR_MOUNT=1 GEOFF_RESET_RANCHER=1 GEOFF_RESET_CEPH=1 ./Step_02_default__PrepareDrives.sh
 #init your kubernetes cluster on the first node, this will give you instructions on how to add more nodes
 GEOFF_VAR_MOUNT=1 GEOFF_RESET_RANCHER=1 GEOFF_RESET_CEPH=1 ./Step_03_init__PrepareOs.sh && ./Step_02__<yoursetup>__PrepareDrives.sh
+```
+
+Or, if you already made the /var/ partiion but otherwise broke the ceph stuff:
+
+```sh
+GEOFF_VAR_MOUNT=0 GEOFF_RESET_RANCHER=1 GEOFF_RESET_CEPH=1 sudo ./Step_02_default__PrepareDrives.sh
 ```
