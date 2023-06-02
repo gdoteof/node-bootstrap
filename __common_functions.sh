@@ -281,7 +281,7 @@ function prepare_ceph_device() {
 
       # Format the new partition as a physical volume for Ceph
       PARTITION_NUMBER=$(parted -s -- $DISK print | awk '/^ *[0-9]+/ {print $1}' | tail -n 1)
-      echo Making a pv on ${DISK}p$PARTITION_NUMBER)
+      echo Making a pv on ${DISK}p$PARTITION_NUMBER
       pvcreate ${DISK}p$((PARTITION_NUMBER))
 
       echo "All remaining space left as a raw volume for Ceph."
