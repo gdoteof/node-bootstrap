@@ -1,4 +1,6 @@
 node-label:
   - "rack=basement0"
   - "storage=ceph"
-  - "role=rook, agent, worker"
+  - "role=rook"
+  - "role=agent"
+  - "role=worker"
