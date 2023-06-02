@@ -265,7 +265,9 @@ function prepare_ceph_device() {
       echo "Preparing remaining space on $DISK as a raw volume for Ceph."
 
       if [ "$(parted -s -- $DISK print free | awk '/^Free Space/ {print $3}')" != '100%' ]; then
+            echo "DEBUG: $DISK has free space, creating a partition"
             parted -s -- $DISK mkpart primary $(parted -s -- $DISK print free | awk '/^Free Space/ {print $2}') 100%
+            echo "DEBUG: Creating a PV on ${DISK}p2"
             partprobe $DISK
             pvcreate ${DISK}p2
 
