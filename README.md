@@ -1,6 +1,10 @@
-# Geoff's node bootstrapper
+# PRE ALPHA NONSENSE
 
-## gets a node ready for kubernetes
+the below is full of typos and things that might have been true but no longer are true.  although written like it might want to be used by someone else IT SHOULD NOT BE USED BY ANYONE ELSE, because the instructions are wrong.  If you have drives plugged into machines you run this code on, you really really need to be sure you do not want the data on those drives.  Everything in here assumes pretty much complete disposability and does not talk about re-joining a cluster with data held already.
+
+## Geoff's node bootstrapper
+
+### gets a node ready for kubernetes
 
 This repo is oriented toward building a ceph backing kubernetes backing ceph cluster running on baremetal. It uses K3s as the kubernetes distribution, and rancher as the kubernetes management system, and my own scripts to get the node ready for kubernetes.
 
