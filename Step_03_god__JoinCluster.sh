@@ -23,6 +23,8 @@ expect_geoff_creds
 copyk3sConfigGod
 
 
+reset_logs
+
 curl -sfL https://get.k3s.io | K3S_TOKEN=$GEOFF_K3S_TOKEN sh -s - server --server https://$GEOFF_K3S_SERVER:6443
 
 
